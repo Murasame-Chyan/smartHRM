@@ -3,6 +3,12 @@ let skillOptions = []; // [{id, skillName}, ...]
 let projectMap = {}; // {projId: projName}
 let depMap = {};     // {depId: depName}
 
+// 翻页
+let currentPage = 1;          // 当前页码
+let pageSize    = 20;         // 每页条数
+let sortAsc     = true;       // true=正序，false=倒序
+let fullList    = [];         // 保存后端返回的完整结果
+
 /* ==========  初始化  ========== */
 window.onload = function(){
     loadMetaData();   // 拉技能/项目/部门
@@ -104,24 +110,45 @@ function doSearch(){
         .catch(err=>alert(err));
 }
 
-/* ==========  渲染结果表  ========== */
+/* ==========  渲染结果表（带排序+分页）  ========== */
 function renderTable(list){
-    const tbody = document.querySelector('#resultTable tbody');
-    tbody.innerHTML = '';   // 清空旧数据
+    fullList = list;          // 保存完整结果
+    currentPage = 1;          // 每次新搜索后回到第1页
+    renderPage();             // 真正渲染逻辑抽出去
+}
 
-    list.forEach(emp=>{
+/* ----------  排序切换  ---------- */
+function toggleSort(){
+    sortAsc = !sortAsc;
+    document.getElementById('sortIcon').textContent = sortAsc ? '↑' : '↓';
+    currentPage = 1;   // 重新从第一页显示
+    renderPage();
+}
+
+/* ----------  真正渲染当前页  ---------- */
+function renderPage(){
+    // 1. 排序
+    fullList.sort((a,b) => sortAsc ? a._id - b._id : b._id - a._id);
+
+    // 2. 分页
+    const total   = fullList.length;
+    const maxPage = Math.ceil(total / pageSize);
+    const start   = (currentPage - 1) * pageSize;
+    const end     = start + pageSize;
+    const pageData= fullList.slice(start, end);
+
+    // 3. 写表格
+    const tbody = document.querySelector('#resultTable tbody');
+    tbody.innerHTML = '';
+    pageData.forEach(emp => {
         const tr = document.createElement('tr');
 
-        // 技能列：拼成 "Java-4, MySQL-3"
         const skillTexts = (emp.skillList || [])
             .map(item => {
                 const skill = skillOptions.find(s => s._id == item.skillId);
-                const name  = skill ? skill.skillName : '未知技能';
-                return `${name} - 熟练度:${item.proficiency}`;
-            })
-            .join('<br>');
+                return `${skill ? skill.skillName : '未知技能'} - 熟练度:${item.proficiency}`;
+            }).join('<br>');
 
-        // 项目列：拼成 "订单系统, 支付中心"
         const projTexts = (emp.projects || [])
             .map(item => projectMap[item.projId] || `项目${item.projId}`)
             .join('<br>');
@@ -131,8 +158,46 @@ function renderTable(list){
             <td>${emp.empName}</td>
             <td>${depMap[emp.depId] || '未知部门'}</td>
             <td>${skillTexts}</td>
-            <td>${projTexts}</td>
-        `;
+            <td>${projTexts}</td>`;
         tbody.appendChild(tr);
     });
+
+    // 4. 更新分页按钮状态
+    document.getElementById('pageInfo').textContent = `第 ${currentPage} 页 / 共 ${maxPage} 页`;
+    document.getElementById('btnPrev').disabled = currentPage === 1;
+    document.getElementById('btnNext').disabled = currentPage === maxPage;
+
+    document.getElementById('pageInput').value = currentPage;
+}
+
+/* ----------  翻页  ---------- */
+function changePage(delta){
+    const maxPage = Math.ceil(fullList.length / pageSize);
+    const newPage = currentPage + delta;
+    if (newPage >= 1 && newPage <= maxPage) {
+        currentPage = newPage;
+        renderPage();
+    }
+}
+
+/* ----------  首页 / 尾页  ---------- */
+function gotoFirst(){
+    currentPage = 1;
+    renderPage();
+}
+function gotoLast(){
+    currentPage = Math.ceil(fullList.length / pageSize);
+    renderPage();
+}
+
+/* ----------  输入框跳转  ---------- */
+function jumpToPage(){
+    const maxPage = Math.ceil(fullList.length / pageSize);
+    let pageNum   = parseInt(document.getElementById('pageInput').value, 10);
+    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= maxPage) {
+        currentPage = pageNum;
+        renderPage();
+    } else {
+        alert('页码超出范围！');
+    }
 }

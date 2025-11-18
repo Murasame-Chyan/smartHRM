@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>员工技能匹配</title>
@@ -21,7 +21,10 @@
 <table id="resultTable">
     <thead>
     <tr>
-        <th>_id</th>
+        <!-- 新增点击排序 -->
+        <th style="cursor:pointer" onclick="toggleSort()">
+            id <span id="sortIcon">⇅</span>
+        </th>
         <th>姓名</th>
         <th>部门</th>
         <th>技能列表</th>
@@ -29,6 +32,27 @@
     </tr>
     </thead>
     <tbody><!-- 动态填充 --></tbody>
+    <!-- 分页控制 -->
+    <tfoot>
+    <tr>
+        <td colspan="5" class="page-bar">
+            <button id="btnFirst" onclick="gotoFirst()">首页</button>
+            <button id="btnPrev"  onclick="changePage(-1)">上一页</button>
+
+            <span class="page-jump">
+        第
+        <input type="number" id="pageInput" min="1" onkeypress="if(event.key==='Enter') jumpToPage()">
+        页
+        <button onclick="jumpToPage()">跳转</button>
+      </span>
+
+            <button id="btnNext" onclick="changePage(1)">下一页</button>
+            <button id="btnLast" onclick="gotoLast()">尾页</button>
+
+            <span id="pageInfo" class="page-info"></span>
+        </td>
+    </tr>
+    </tfoot>
 </table>
 
 <script src="/js/skillmatch.js"></script>

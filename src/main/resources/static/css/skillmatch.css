@@ -9,3 +9,28 @@ th{background:#f2f2f2;}
     line-height: 1.4;
     margin: 0;
 }
+
+/* ========== 分页栏 ========== */
+.page-bar {
+    text-align: center;
+    white-space: nowrap;
+    padding: 6px 0;
+}
+
+.page-bar button {
+    margin: 0 4px;
+    padding: 4px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.page-jump input {
+    width: 50px;
+    text-align: center;
+    margin: 0 4px;
+}
+
+.page-info {
+    margin-left: 20px;
+    font-weight: bold;
+}
