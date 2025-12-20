@@ -1,7 +1,0 @@
-# Project-name: smart Human Resource Management
-spring:
-  application:
-    name: smartHRM
-
-  profiles:
-    active: dev
