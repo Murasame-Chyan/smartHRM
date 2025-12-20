@@ -15,7 +15,7 @@ import java.util.Map;
 public class Employee {
     @Id               // ← 告诉 Spring Data 这是主键
     @Field("_id")     // ← 强制映射文档字段 "_id"
-    private Integer id;
+    private Integer _id;//id修改为_id
     private String empName;
     private Integer depId;
     private List<Map<String, Integer>> skillList;  // 员工拥有技能: [{技能id, 熟练度}...]

@@ -82,7 +82,7 @@ public class EmployeeDao {
      * @param employee 待更新的员工对象（必须包含主键ID）
      */
     public void update(Employee employee) {
-        Query query = new Query(Criteria.where("_id").is(employee.getId()));
+        Query query = new Query(Criteria.where("_id").is(employee.get_id()));
         Update update = new Update()
                 .set("empName", employee.getEmpName())
                 .set("depId", employee.getDepId())

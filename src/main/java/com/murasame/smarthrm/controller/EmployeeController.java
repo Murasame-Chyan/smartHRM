@@ -241,7 +241,7 @@ public class EmployeeController {
 
         // 4. 封装DTO用于表单回显（兼容部门ID为空的情况）
         EmployeeDTO dto = new EmployeeDTO();
-        dto.setId(employee.getId());
+        dto.setId(employee.get_id());
         dto.setName(employee.getEmpName());
         dto.setDepartment(employee.getDepId() != null ? employee.getDepId().toString() : "");
         dto.setJoinDate(employee.getJoinDate());
@@ -294,7 +294,7 @@ public class EmployeeController {
         try {
             // 3. 组装编辑后员工对象（兼容空值处理）
             Employee employee = new Employee();
-            employee.setId(dto.getId());
+            employee.set_id(dto.getId());
             employee.setEmpName(dto.getName()); // 姓名必填
 
             // 部门ID：为空设为null，非空转换为Integer

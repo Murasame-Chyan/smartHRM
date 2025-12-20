@@ -263,7 +263,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="emp : ${employees}">
-                            <td th:text="${emp.id}" class="fw-medium"></td>
+                            <td th:text="${emp._id}" class="fw-medium"></td>
                             <td th:text="${emp.empName}" class="fw-semibold text-gray-800"></td>
                             <td>
                                 <!-- 直接显示后端预处理的部门名称，样式通过 deptType 绑定 -->
@@ -289,13 +289,13 @@
                             <td>
                                 <div class="action-buttons d-flex gap-2">
                                     <form th:action="@{/employees/del}" method="post" style="margin: 0;">
-                                        <input type="hidden" name="id" th:value="${emp.id}">
+                                        <input type="hidden" name="id" th:value="${emp._id}">
                                         <button type="submit" class="btn btn-outline-danger flex-1"
                                                 onclick="return confirm('确定删除吗？')">
                                             <i class="bi bi-trash me-1"></i> 删除
                                         </button>
                                     </form>
-                                    <a th:href="@{/employees/mod(id=${emp.id}, pageNum=${pageNum}, empName=${empName})}" class="btn btn-outline-primary flex-1">
+                                    <a th:href="@{/employees/mod(id=${emp._id}, pageNum=${pageNum}, empName=${empName})}" class="btn btn-outline-primary flex-1">
                                         <i class="bi bi-pencil me-1"></i> 编辑
                                     </a>
                                 </div>

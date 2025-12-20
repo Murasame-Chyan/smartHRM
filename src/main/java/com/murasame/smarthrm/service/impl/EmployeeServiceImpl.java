@@ -84,7 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void saveEmployee(Employee employee, EmployeeDTO dto) {
         // 1. 生成员工自增ID（基于现有最大ID+1，无员工时从1开始）
         Integer newEmpId = generateEmpId();
-        employee.setId(newEmpId);
+        employee.set_id(newEmpId);
         log.info("开始新增员工：生成自增ID = {}，员工姓名 = {}", newEmpId, employee.getEmpName());
 
         // 2. 解析并绑定技能（校验技能格式、存在性、熟练度范围）
@@ -94,10 +94,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         bindDepartment(employee);
 
         // 4. 绑定项目关联（将员工添加到选中项目的成员列表）
-        bindProjects(employee.getId(), dto, employee);
+        bindProjects(employee.get_id(), dto, employee);
 
         // 5. 绑定培训关联（将员工添加到选中培训的成员列表）
-        bindTrainings(employee.getId(), dto, employee);
+        bindTrainings(employee.get_id(), dto, employee);
 
         // 6. 最终保存员工（MongoDB upsert：ID不存在则新增）
         employeeDao.update(employee);
@@ -111,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void updateEmployee(Employee newEmployee, EmployeeDTO dto) {
-        Integer empId = newEmployee.getId();
+        Integer empId = newEmployee.get_id();
         Employee oldEmployee = employeeDao.findById(empId);
         if (oldEmployee == null) {
             throw new RuntimeException("员工ID:" + empId + " 不存在");
@@ -275,9 +275,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (oldDepId != null) {
                 Department oldDept = departmentDao.findById(oldDepId);
                 if (oldDept != null && oldDept.getEmpList() != null) {
-                    oldDept.getEmpList().removeIf(empMap -> oldEmp.getId().equals(empMap.get("empId")));
+                    oldDept.getEmpList().removeIf(empMap -> oldEmp.get_id().equals(empMap.get("empId")));
                     // 若为旧部门经理，置空经理ID
-                    if (oldEmp.getId().equals(oldDept.getManagerId())) {
+                    if (oldEmp.get_id().equals(oldDept.getManagerId())) {
                         oldDept.setManagerId(null);
                     }
                     departmentDao.update(oldDept);
@@ -295,9 +295,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
                 // 避免重复添加
                 boolean exists = newDept.getEmpList().stream()
-                        .anyMatch(empMap -> newEmp.getId().equals(empMap.get("empId")));
+                        .anyMatch(empMap -> newEmp.get_id().equals(empMap.get("empId")));
                 if (!exists) {
-                    newDept.getEmpList().add(Map.of("empId", newEmp.getId()));
+                    newDept.getEmpList().add(Map.of("empId", newEmp.get_id()));
                     departmentDao.update(newDept);
                 }
             }
@@ -551,7 +551,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 查询所有员工，提取最大ID
         List<Employee> allEmps = employeeDao.findAll();
         Integer maxId = allEmps.stream()
-                .map(Employee::getId)
+                .map(Employee::get_id)
                 .filter(Objects::nonNull)
                 .max(Integer::compareTo)
                 .orElse(null);
@@ -569,7 +569,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private void bindDepartment(Employee employee) {
         Integer depId = employee.getDepId();
         if (depId == null) {
-            log.warn("员工ID: {} 未选择所属部门，跳过部门关联", employee.getId());
+            log.warn("员工ID: {} 未选择所属部门，跳过部门关联", employee.get_id());
             return;
         }
         // 校验部门是否存在
@@ -583,11 +583,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         // 避免重复添加
         boolean exists = dept.getEmpList().stream()
-                .anyMatch(empMap -> employee.getId().equals(empMap.get("empId")));
+                .anyMatch(empMap -> employee.get_id().equals(empMap.get("empId")));
         if (!exists) {
-            dept.getEmpList().add(Map.of("empId", employee.getId()));
+            dept.getEmpList().add(Map.of("empId", employee.get_id()));
             departmentDao.update(dept);
-            log.info("员工ID: {} 已关联到部门ID: {}", employee.getId(), depId);
+            log.info("员工ID: {} 已关联到部门ID: {}", employee.get_id(), depId);
         }
     }
 

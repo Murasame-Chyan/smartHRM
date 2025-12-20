@@ -124,7 +124,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             List<Employee> addedEmps = employeeDao.findByIds(newEmpIds);
             if (addedEmps.size() != newEmpIds.size()) {
                 List<Integer> notExistEmps = newEmpIds.stream()
-                        .filter(empId -> addedEmps.stream().noneMatch(e -> e.getId().equals(empId)))
+                        .filter(empId -> addedEmps.stream().noneMatch(e -> e.get_id().equals(empId)))
                         .collect(Collectors.toList());
                 throw new RuntimeException("选中的员工ID: " + notExistEmps + " 不存在，请检查");
             }
@@ -135,8 +135,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                 Integer newDeptId = dept.getId();   // 新部门ID
 
                 // 3.1 更新员工的部门ID为新部门
-                employeeDao.updateDepId(emp.getId(), newDeptId);
-                log.info("员工ID: {} - 从原部门ID: {} 迁移到新部门ID: {}", emp.getId(), oldDeptId, newDeptId);
+                employeeDao.updateDepId(emp.get_id(), newDeptId);
+                log.info("员工ID: {} - 从原部门ID: {} 迁移到新部门ID: {}", emp.get_id(), oldDeptId, newDeptId);
 
                 // 3.2 清理原部门关联（移除员工、置空原部门负责人）
                 if (oldDeptId != null) {
@@ -145,20 +145,20 @@ public class DepartmentServiceImpl implements DepartmentService {
                         // 从原部门empList移除该员工
                         List<Map<String, Integer>> oldEmpList = oldDept.getEmpList();
                         if (oldEmpList != null) {
-                            oldEmpList.removeIf(empMap -> emp.getId().equals(empMap.get("empId")));
+                            oldEmpList.removeIf(empMap -> emp.get_id().equals(empMap.get("empId")));
                             oldDept.setEmpList(oldEmpList);
 
                             // 若该员工是原部门负责人，置空原部门负责人ID
-                            if (emp.getId().equals(oldDept.getManagerId())) {
+                            if (emp.get_id().equals(oldDept.getManagerId())) {
                                 oldDept.setManagerId(null);
-                                log.info("原部门ID: {} - 负责人（员工ID: {}）已迁移，负责人置空", oldDeptId, emp.getId());
+                                log.info("原部门ID: {} - 负责人（员工ID: {}）已迁移，负责人置空", oldDeptId, emp.get_id());
                             }
 
                             departmentDao.update(oldDept);
-                            log.info("原部门ID: {} - 已从员工列表中移除员工ID: {}", oldDeptId, emp.getId());
+                            log.info("原部门ID: {} - 已从员工列表中移除员工ID: {}", oldDeptId, emp.get_id());
                         }
                     } else {
-                        log.warn("员工ID: {} 的原部门ID: {} 不存在，无需清理", emp.getId(), oldDeptId);
+                        log.warn("员工ID: {} 的原部门ID: {} 不存在，无需清理", emp.get_id(), oldDeptId);
                     }
                 }
             });
@@ -229,7 +229,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             List<Employee> addedEmps = employeeDao.findByIds(addedEmpIds);
             if (addedEmps.size() != addedEmpIds.size()) {
                 List<Integer> notExistEmps = addedEmpIds.stream()
-                        .filter(empId -> addedEmps.stream().noneMatch(e -> e.getId().equals(empId)))
+                        .filter(empId -> addedEmps.stream().noneMatch(e -> e.get_id().equals(empId)))
                         .collect(Collectors.toList());
                 throw new RuntimeException("新增员工ID: " + notExistEmps + " 不存在");
             }
@@ -240,8 +240,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                 Integer currentDeptId = deptId;        // 当前编辑的部门ID
 
                 // 5.1 更新员工的部门ID为当前部门
-                employeeDao.updateDepId(emp.getId(), currentDeptId);
-                log.info("员工ID: {} - 从原部门ID: {} 迁移到新部门ID: {}", emp.getId(), oldEmpDeptId, currentDeptId);
+                employeeDao.updateDepId(emp.get_id(), currentDeptId);
+                log.info("员工ID: {} - 从原部门ID: {} 迁移到新部门ID: {}", emp.get_id(), oldEmpDeptId, currentDeptId);
 
                 // 5.2 清理原部门关联（非当前部门时）
                 if (oldEmpDeptId != null && !oldEmpDeptId.equals(currentDeptId)) {
@@ -250,20 +250,20 @@ public class DepartmentServiceImpl implements DepartmentService {
                         // 从原部门empList移除该员工
                         List<Map<String, Integer>> oldEmpDeptEmpList = oldEmpDept.getEmpList();
                         if (oldEmpDeptEmpList != null) {
-                            oldEmpDeptEmpList.removeIf(empMap -> emp.getId().equals(empMap.get("empId")));
+                            oldEmpDeptEmpList.removeIf(empMap -> emp.get_id().equals(empMap.get("empId")));
                             oldEmpDept.setEmpList(oldEmpDeptEmpList);
 
                             // 若该员工是原部门负责人，置空原部门负责人ID
-                            if (emp.getId().equals(oldEmpDept.getManagerId())) {
+                            if (emp.get_id().equals(oldEmpDept.getManagerId())) {
                                 oldEmpDept.setManagerId(null);
-                                log.info("原部门ID: {} - 负责人（员工ID: {}）已迁移，负责人置空", oldEmpDeptId, emp.getId());
+                                log.info("原部门ID: {} - 负责人（员工ID: {}）已迁移，负责人置空", oldEmpDeptId, emp.get_id());
                             }
 
                             departmentDao.update(oldEmpDept);
-                            log.info("原部门ID: {} - 已从员工列表中移除员工ID: {}", oldEmpDeptId, emp.getId());
+                            log.info("原部门ID: {} - 已从员工列表中移除员工ID: {}", oldEmpDeptId, emp.get_id());
                         }
                     } else {
-                        log.warn("员工ID: {} 的原部门ID: {} 不存在，无需清理", emp.getId(), oldEmpDeptId);
+                        log.warn("员工ID: {} 的原部门ID: {} 不存在，无需清理", emp.get_id(), oldEmpDeptId);
                     }
                 }
             });
@@ -430,7 +430,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             empSimpleList = emps.stream()
                     .map(emp -> {
                         DepartmentDTO.EmpSimpleDTO simpleDTO = new DepartmentDTO.EmpSimpleDTO();
-                        simpleDTO.setId(emp.getId());
+                        simpleDTO.setId(emp.get_id());
                         simpleDTO.setEmpName(emp.getEmpName());
                         return simpleDTO;
                     })
@@ -465,7 +465,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         List<DepartmentDTO.EmpSimpleDTO> empSimpleList = empList.stream().map(emp -> {
             DepartmentDTO.EmpSimpleDTO empSimple = new DepartmentDTO.EmpSimpleDTO();
-            empSimple.setId(emp.getId());
+            empSimple.setId(emp.get_id());
             empSimple.setEmpName(emp.getEmpName());
             return empSimple;
         }).collect(Collectors.toList());
