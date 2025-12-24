@@ -16,3 +16,4 @@ public class Task {
     private Integer managerId;
     private Integer taskStatus;//0-未完成 1-已完成
 }
+

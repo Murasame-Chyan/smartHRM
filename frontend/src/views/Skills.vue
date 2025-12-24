@@ -110,16 +110,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Trophy, Search, Plus, Edit, Delete, Refresh } from '@element-plus/icons-vue'
-import {
-  getSkills,
-  searchSkills,
-  addSkill,
-  updateSkill,
-  deleteSkill
-} from '@/api/skill'
+import {onMounted, reactive, ref} from 'vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {Delete, Edit, Plus, Refresh, Search, Trophy} from '@element-plus/icons-vue'
+import {addSkill, deleteSkill, getSkills, searchSkills, updateSkill} from '@/api/skill'
 
 const loading = ref(false)
 const submitting = ref(false)

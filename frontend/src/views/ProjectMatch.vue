@@ -361,32 +361,20 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import {computed, onMounted, reactive, ref} from 'vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {Connection, Delete, Edit, FolderOpened, List, Plus, Refresh, Search} from '@element-plus/icons-vue'
 import {
-  FolderOpened,
-  Connection,
-  List,
-  Plus,
-  Delete,
-  Refresh,
-  Search,
-  Edit
-} from '@element-plus/icons-vue'
-import {
-  getAllProjects,
   createProject,
-  updateProject,
+  createTask,
   deleteProject,
   deleteProjectsBatch,
-  matchByProjectName,
-  matchByEmployee,
+  deleteTask as deleteTaskApi,
+  getAllProjects,
   getProjectTasks,
-  getProjectPendingTasks,
-  getProjectCompletedTasks,
-  createTask,
-  updateTask,
-  deleteTask as deleteTaskApi
+  matchByEmployee,
+  matchByProjectName,
+  updateProject
 } from '@/api/project'
 
 const loading = ref(false)

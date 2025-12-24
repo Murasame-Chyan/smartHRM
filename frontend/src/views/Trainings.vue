@@ -146,16 +146,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Reading, Search, Plus, Edit, Delete, Refresh } from '@element-plus/icons-vue'
-import {
-  getTrainings,
-  searchTrainings,
-  addTraining,
-  updateTraining,
-  deleteTraining
-} from '@/api/training'
+import {onMounted, reactive, ref} from 'vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {Delete, Edit, Plus, Reading, Refresh, Search} from '@element-plus/icons-vue'
+import {addTraining, deleteTraining, getTrainings, searchTrainings, updateTraining} from '@/api/training'
 
 const loading = ref(false)
 const submitting = ref(false)

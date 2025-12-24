@@ -161,10 +161,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Search, Refresh, Delete, Trophy, User } from '@element-plus/icons-vue'
-import { matchBySkills, getAllSkills } from '@/api/skillMatch'
+import {onMounted, reactive, ref} from 'vue'
+import {ElMessage} from 'element-plus'
+import {Delete, Refresh, Search, Trophy, User} from '@element-plus/icons-vue'
+import {getAllSkills, matchBySkills} from '@/api/skillMatch'
 
 const loading = ref(false)
 const hasSearched = ref(false)

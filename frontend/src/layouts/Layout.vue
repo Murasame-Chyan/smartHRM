@@ -39,9 +39,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { Briefcase } from '@element-plus/icons-vue'
+import {computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {Briefcase} from '@element-plus/icons-vue'
 import router from '@/router'
 
 const route = useRoute()
