@@ -708,7 +708,7 @@ const formatDate = (date) => {
 }
 
 onMounted(() => {
-  refreshData()
+  // 初始不自动加载数据，等待用户操作
 })
 </script>
 
