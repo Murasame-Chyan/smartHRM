@@ -36,7 +36,10 @@ public class SkillController {
 
         // 4. 自动生成ID
         if (skill.get_id() == null) {
-            skill.set_id((int) (System.currentTimeMillis() / 1000));
+            List<Skill> skills = skillRepo.findTopByOrderBy_idDesc();
+            // 如果列表不为空则取第一个元素的 ID + 1，否则从 1 开始
+            int nextId = (skills == null || skills.isEmpty()) ? 1 : skills.get(0).get_id() + 1;
+            skill.set_id(nextId);
         }
 
         skillRepo.save(skill);

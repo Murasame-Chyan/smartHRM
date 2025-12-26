@@ -48,7 +48,10 @@ public class TrainingController {
         }
 
         if (training.get_id() == null) {
-            training.set_id((int) (System.currentTimeMillis() / 1000));
+            List<Training> trainings = trainingRepo.findTopByOrderBy_idDesc();
+            // 如果列表不为空则取第一个元素的 ID + 1，否则从 1 开始
+            int nextId = (trainings == null || trainings.isEmpty()) ? 1 : trainings.get(0).get_id() + 1;
+            training.set_id(nextId);
         }
 
         trainingRepo.save(training);
