@@ -162,7 +162,7 @@ const searchForm = reactive({
 })
 
 const pagination = reactive({
-  page: 0,
+  page: 1,
   size: 10,
   total: 0
 })
@@ -196,7 +196,7 @@ const loadData = async () => {
     } else {
       // 分页模式
       const result = await getTrainings({
-        page: pagination.page,
+        page: pagination.page - 1,  // 转换为后端需要的基于0的页码
         size: pagination.size
       })
       if (result && result.content) {
@@ -216,19 +216,19 @@ const loadData = async () => {
 
 const handleSearch = () => {
   if (searchForm.name) {
-    pagination.page = 0
+    pagination.page = 1
   }
   loadData()
 }
 
 const handleSizeChange = (size) => {
   pagination.size = size
-  pagination.page = 0
+  pagination.page = 1
   loadData()
 }
 
 const handlePageChange = (page) => {
-  pagination.page = page - 1
+  pagination.page = page 
   loadData()
 }
 
