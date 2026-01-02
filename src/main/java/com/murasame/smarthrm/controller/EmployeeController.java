@@ -5,6 +5,8 @@ import com.murasame.smarthrm.dto.EmployeeDTO;
 import com.murasame.smarthrm.entity.*;
 import com.murasame.smarthrm.service.EmployeeService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -12,9 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -381,5 +380,12 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse(false, e.getMessage(), null));
         }
+    }
+
+    // 获取员工DTO列表 优化响应速度
+    @RequestMapping("/getEmployeeDTOs")
+    @ResponseBody
+    public List<EmployeeDTO> getEmployeeDTOs() {
+        return employeeService.getEmployeeDTOs();
     }
 }

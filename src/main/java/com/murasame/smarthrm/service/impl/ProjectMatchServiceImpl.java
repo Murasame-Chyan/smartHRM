@@ -3,6 +3,7 @@ package com.murasame.smarthrm.service.impl;
 import com.murasame.smarthrm.dao.EmployeeRepo;
 import com.murasame.smarthrm.dao.ProjectRepo;
 import com.murasame.smarthrm.dao.TaskRepo;
+import com.murasame.smarthrm.dto.ProjectDTO;
 import com.murasame.smarthrm.entity.Employee;
 import com.murasame.smarthrm.entity.Project;
 import com.murasame.smarthrm.entity.Task;
@@ -319,5 +320,16 @@ public class ProjectMatchServiceImpl implements ProjectMatchService {
 
             return projectWithTasks;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProjectDTO> getProjectDTOs(){
+        List<Project> projects = projectRepo.findAll();
+        List<ProjectDTO> projectDTOs = new ArrayList<>(List.of());
+        for(Project p : projects){
+            projectDTOs.add(new ProjectDTO(p.getId(), p.getProjName()));
+        }
+
+        return projectDTOs;
     }
 }

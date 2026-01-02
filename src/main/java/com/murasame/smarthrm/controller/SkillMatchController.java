@@ -42,7 +42,7 @@ public class SkillMatchController {
 		return skillMatchService.matchBySkills(dtoList);
 	}
 
-	// 辅助接口
+	// 辅助接口 - 需要优化转移的地方
 	/* 仅返回 [{id,skillName}, ...] */
 	@GetMapping("/skills")
 	@ResponseBody

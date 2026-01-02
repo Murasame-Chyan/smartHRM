@@ -1,4 +1,13 @@
 package com.murasame.smarthrm.dto;
 
-public class SkillDTO {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+@AllArgsConstructor
+public class SkillDTO implements Serializable {
+	private Integer skillId;
+    private String skillName;
 }

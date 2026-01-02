@@ -67,4 +67,10 @@ public interface EmployeeService {
      * @return 分页结果对象（包含当前页员工数据、总条数、分页参数）
      */
     Page<Employee> listEmployeesWithPage(String empName, int pageNum, int pageSize);
+
+    /**
+     * 获取员工DTO 优化前端响应速度
+     * @return List.of(EmployeeDTO)
+     */
+    List<EmployeeDTO> getEmployeeDTOs();
 }

@@ -13,7 +13,8 @@ import java.util.List;
 public class Project {
 
 	@Id
-	private Integer id;                 // _id
+	@Field("_id")
+	private Integer id;                 // id
 
 	@Field("projName")
 	private String projName;

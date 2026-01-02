@@ -1,8 +1,7 @@
 package com.murasame.smarthrm.service;
 
-import com.murasame.smarthrm.entity.Employee;
+import com.murasame.smarthrm.dto.ProjectDTO;
 import com.murasame.smarthrm.entity.Project;
-import com.murasame.smarthrm.entity.Task;
 
 import java.util.List;
 import java.util.Map;
@@ -74,4 +73,10 @@ public interface ProjectMatchService {
      * @return 包含项目及其任务信息的列表
      */
     List<Map<String, Object>> getProjectsWithTasks(List<Project> projects);
+
+    /**
+     * 获取项目列表的简单数据传输对象（暂时只含有Id & Name）
+     * @return projectDTO
+     */
+    List<ProjectDTO> getProjectDTOs();
 }

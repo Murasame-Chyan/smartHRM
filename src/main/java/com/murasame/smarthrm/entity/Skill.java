@@ -11,6 +11,8 @@ public class Skill {
 	@Id               // ← 告诉 Spring Data 这是主键
 	@Field("_id")     // ← 强制映射文档字段 "_id"
 	private Integer _id;
+	@Field("skillName")
 	private String skillName;
+	@Field("skillind")
 	private String skillKind;
 }

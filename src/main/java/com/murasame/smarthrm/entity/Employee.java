@@ -1,10 +1,11 @@
 package com.murasame.smarthrm.entity;
 //林 2025.12.24
+
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class Employee {
     private String empName;
     private Integer depId;
     private List<Map<String, Integer>> skillList;  // 员工拥有技能: [{技能id, 熟练度}...]
-    private List<Map<String, Integer>> projects;                 // 员工参与项目: [projId:项目id...]
+    private List<Map<String, Integer>> projects;                 // 员工参与项目: [projName:项目id...]
     private LocalDateTime joinDate;                 // 加入时间
     private List<Map<String, Integer>> trainingList;
 

@@ -1,7 +1,9 @@
 package com.murasame.smarthrm.controller;
 
 import com.murasame.smarthrm.dao.SkillRepo;
+import com.murasame.smarthrm.dto.SkillDTO;
 import com.murasame.smarthrm.entity.Skill;
+import com.murasame.smarthrm.service.SkillMatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import java.util.List;
 public class SkillController {
 
     private final SkillRepo skillRepo;
+    private final SkillMatchService skillMatchService;
 
     @PostMapping("/add")
     public ResponseEntity<String> addSkill(@RequestBody Skill skill) {
@@ -86,5 +89,12 @@ public class SkillController {
     @GetMapping("/{id}")
     public Skill getSkill(@PathVariable Integer id) {
         return skillRepo.findById(id).orElse(null);
+    }
+
+    // skillDTO减少数据传输 优化响应速度
+    @GetMapping("/getSkillDTOs")
+    @ResponseBody
+    public List<SkillDTO> getSkillDTOs() {
+        return skillMatchService.getSkillDTOs();
     }
 }

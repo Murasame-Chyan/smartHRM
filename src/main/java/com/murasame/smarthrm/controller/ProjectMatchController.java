@@ -1,15 +1,11 @@
 package com.murasame.smarthrm.controller;
 
-import com.murasame.smarthrm.dao.EmployeeRepo;
-import com.murasame.smarthrm.dao.ProjectRepo;
-import com.murasame.smarthrm.dao.SkillRepo;
-import com.murasame.smarthrm.dao.TaskRepo;
-import com.murasame.smarthrm.entity.Employee;
-import com.murasame.smarthrm.entity.Project;
-import com.murasame.smarthrm.entity.Skill;
-import com.murasame.smarthrm.entity.Task;
+import com.murasame.smarthrm.dao.*;
+import com.murasame.smarthrm.dto.ProjectDTO;
+import com.murasame.smarthrm.entity.*;
 import com.murasame.smarthrm.service.ProjectMatchService;
 import com.murasame.smarthrm.service.TaskService;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +24,8 @@ public class ProjectMatchController {
     private final EmployeeRepo employeeRepo;
     private final SkillRepo skillRepo;
     private final TaskRepo taskRepo;
+    @Resource
+    private DepartmentRepo departmentRepo;
 
     @GetMapping("/")
     public String projectMatchPage(){
@@ -85,9 +83,16 @@ public class ProjectMatchController {
     /* 仅返回部门数据 [{id,depName}, ...] */
     @GetMapping("/departments")
     @ResponseBody
-    public List<Object> allDepartments(){
+    public List<Department> allDepartments(){
         // 这里需要根据实际的部门数据结构调整
-        return List.of();
+        return departmentRepo.findAll();
+    }
+
+    /* 返回projectDTO减少前端数据量 */
+    @GetMapping("/projectsDTO")
+    @ResponseBody
+    public List<ProjectDTO> allProjectsDTO(){
+        return projectMatchService.getProjectDTOs();
     }
 
     // ========== 项目管理接口 ==========

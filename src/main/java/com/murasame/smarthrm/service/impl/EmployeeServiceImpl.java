@@ -619,4 +619,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return training;
     }
+
+    // 获取员工DTO优化前端响应速度
+
+    @Override
+    public List<EmployeeDTO> getEmployeeDTOs() {
+        List<Employee> employees = employeeDao.findAll();
+        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
+        for (Employee e : employees) {
+            employeeDTOs.add(new EmployeeDTO(e.get_id(), e.getEmpName()));
+        }
+        return employeeDTOs;
+    }
 }

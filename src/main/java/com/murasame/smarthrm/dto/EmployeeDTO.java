@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class EmployeeDTO {
+
     // 分组标记：仅编辑时校验id非空
     public interface Update {}
 
@@ -36,4 +37,10 @@ public class EmployeeDTO {
     private List<Integer> newProjectIds;    // 更新后参与的项目ID列表（全量）
     private List<Integer> newManagerTaskIds;// 更新后负责的任务ID列表（全量）
     private List<Integer> newTrainingIds;   // 更新后参与的培训ID列表（全量）
+
+    // 优化前端响应速度，部分数据传输
+    public EmployeeDTO(Integer id, String empName) {
+        this.id = id;
+        this.name = empName;
+    }
 }
