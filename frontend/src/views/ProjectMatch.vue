@@ -371,12 +371,12 @@ import {
   deleteProjectsBatch,
   deleteTask as deleteTaskApi,
   getAllProjects,
+  getEmployeeDTOs,
   getProjectTasks,
+  getSkillDTOs,
   matchByEmployee,
   matchByProjectName,
-  updateProject,
-  getEmployeeDTOs,
-  getSkillDTOs
+  updateProject
 } from '@/api/project'
 
 const loading = ref(false)
@@ -557,7 +557,9 @@ const handleEdit = (row) => {
     requiredSkillsStr: row.requiredSkills
       ? row.requiredSkills.map(s => `${s.skillId}:${s.minProficiency}`).join(',')
       : '',
-    membersStr: row.members ? row.members.join(', ') : ''
+    membersStr: row.members
+        ? row.members.map(m => m.empId).join(', ')
+        : ''
   })
   projectDialogVisible.value = true
 }
