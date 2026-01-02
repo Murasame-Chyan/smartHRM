@@ -48,7 +48,7 @@
         <el-table-column label="关联技能" width="150">
           <template #default="{ row }">
             <el-tag v-if="row.skillId" type="info">
-              技能{{ row.skillId }}
+              {{allSkills[row.skillId]["skillName"]}}
             </el-tag>
             <span v-else class="text-muted">未设置</span>
           </template>
@@ -61,7 +61,7 @@
               type="success"
               style="margin-right: 5px; margin-bottom: 5px"
             >
-              员工{{ memberId }}
+              {{ allMembers[memberId]["name"] }}
             </el-tag>
             <span v-if="!row.members || row.members.length === 0" class="text-muted">无</span>
           </template>
@@ -149,13 +149,23 @@
 import {onMounted, reactive, ref} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Delete, Edit, Plus, Reading, Refresh, Search} from '@element-plus/icons-vue'
-import {addTraining, deleteTraining, getTrainings, searchTrainings, updateTraining} from '@/api/training'
+import {
+  addTraining,
+  deleteTraining,
+  getEmployeeDTOs,
+  getSkillDTOs,
+  getTrainings,
+  searchTrainings,
+  updateTraining
+} from '@/api/training'
 
 const loading = ref(false)
 const submitting = ref(false)
 const dialogVisible = ref(false)
 const dialogTitle = ref('新增培训')
 const formRef = ref(null)
+const allSkills = ref([])
+const allMembers = ref([])
 
 const searchForm = reactive({
   name: ''
@@ -186,6 +196,8 @@ const formRules = {
 }
 
 const loadData = async () => {
+  allSkills.value = await getSkillDTOs() || []
+  allMembers.value = await getEmployeeDTOs() || []
   loading.value = true
   try {
     if (searchForm.name) {

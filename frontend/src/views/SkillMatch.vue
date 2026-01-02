@@ -18,10 +18,10 @@
 
       <div class="match-tips">
         <el-alert
-          title="使用说明"
-          type="info"
-          :closable="false"
-          show-icon
+            title="使用说明"
+            type="info"
+            :closable="false"
+            show-icon
         >
           <template #default>
             根据所需技能及熟练度要求，匹配符合条件的员工。格式：技能ID:最低熟练度（如：1:3,2:5）
@@ -33,10 +33,10 @@
         <el-form :model="matchForm" label-width="150px">
           <el-form-item label="所需技能">
             <el-input
-              v-model="matchForm.requiredSkills"
-              type="textarea"
-              :rows="4"
-              placeholder="格式：skillId:proficiency,skillId:proficiency（如：1:3,2:5）&#10;多个技能用逗号分隔，每个技能格式：技能ID:最低熟练度（1-5级）"
+                v-model="matchForm.requiredSkills"
+                type="textarea"
+                :rows="4"
+                placeholder="格式：skillId:proficiency,skillId:proficiency（如：1:3,2:5）&#10;多个技能用逗号分隔，每个技能格式：技能ID:最低熟练度（1-5级）"
             />
             <div class="form-tip">
               示例：1:3,2:5 表示需要技能1（最低3级）和技能2（最低5级）
@@ -67,10 +67,10 @@
         <div class="skill-selector">
           <el-checkbox-group v-model="selectedSkills" @change="updateSkillsFromSelector">
             <el-checkbox
-              v-for="skill in allSkills"
-              :key="skill._id"
-              :label="skill._id"
-              style="margin-right: 20px; margin-bottom: 10px"
+                v-for="skill in allSkills"
+                :key="skill._id"
+                :label="skill._id"
+                style="margin-right: 20px; margin-bottom: 10px"
             >
               {{ skill.skillName }}
             </el-checkbox>
@@ -78,11 +78,11 @@
         </div>
         <div style="margin-top: 15px">
           <el-input-number
-            v-model="defaultProficiency"
-            :min="1"
-            :max="5"
-            label="默认熟练度"
-            style="width: 150px"
+              v-model="defaultProficiency"
+              :min="1"
+              :max="5"
+              label="默认熟练度"
+              style="width: 150px"
           />
           <el-button type="primary" @click="applyDefaultProficiency" style="margin-left: 10px">
             应用默认熟练度
@@ -102,10 +102,10 @@
         </template>
 
         <el-table
-          :data="tableData"
-          stripe
-          style="width: 100%"
-          border
+            :data="tableData"
+            stripe
+            style="width: 100%"
+            border
         >
           <el-table-column prop="_id" label="员工ID" width="100" />
           <el-table-column prop="empName" label="员工姓名" width="120" />
@@ -118,26 +118,28 @@
             <template #default="{ row }">
               <div class="skills-display">
                 <el-tag
-                  v-for="(skill, index) in row.skillList"
-                  :key="index"
-                  :type="getSkillTagType(skill)"
-                  style="margin-right: 5px; margin-bottom: 5px"
+                    v-for="(skill, index) in row.skillList"
+                    :key="index"
+                    :type="getSkillTagType(skill)"
+                    style="margin-right: 5px; margin-bottom: 5px"
                 >
-                  技能{{ skill.skillId }}（{{ skill.proficiency }}级）
+                  {{ allSkills[skill.skillId]["skillName"] || '未知技能' }}（{{ skill.proficiency }}级）
                 </el-tag>
                 <span v-if="!row.skillList || row.skillList.length === 0" class="text-muted">无</span>
               </div>
             </template>
           </el-table-column>
+
+          <!-- 参与项目 -->
           <el-table-column label="参与项目" min-width="150">
             <template #default="{ row }">
               <el-tag
-                v-for="(proj, index) in row.projects"
-                :key="index"
-                type="success"
-                style="margin-right: 5px; margin-bottom: 5px"
+                  v-for="(proj, index) in row.projects"
+                  :key="index"
+                  type="success"
+                  style="margin-right: 5px; margin-bottom: 5px"
               >
-                项目{{ proj.projId }}
+                {{ allProjects[proj.projId]["projName"] || '未知项目' }}
               </el-tag>
               <span v-if="!row.projects || row.projects.length === 0" class="text-muted">无</span>
             </template>
@@ -152,9 +154,9 @@
 
       <!-- 空状态 -->
       <el-empty
-        v-if="!loading && tableData.length === 0 && hasSearched"
-        description="未找到符合条件的员工"
-        :image-size="200"
+          v-if="!loading && tableData.length === 0 && hasSearched"
+          description="未找到符合条件的员工"
+          :image-size="200"
       />
     </el-card>
   </div>
@@ -164,7 +166,8 @@
 import {onMounted, reactive, ref} from 'vue'
 import {ElMessage} from 'element-plus'
 import {Delete, Refresh, Search, Trophy, User} from '@element-plus/icons-vue'
-import {getAllSkills, matchBySkills} from '@/api/skillMatch'
+import {getAllDepartments, getAllProjectsDTO, getAllSkills, matchBySkills} from '@/api/skillMatch'
+import {getAllProjects} from "@/api/project.js";
 
 const loading = ref(false)
 const hasSearched = ref(false)
@@ -175,6 +178,8 @@ const matchForm = reactive({
 
 const tableData = ref([])
 const allSkills = ref([])
+const allProjects = ref([])
+const allDepartments = ref([])
 const selectedSkills = ref([])
 const defaultProficiency = ref(3)
 
@@ -186,11 +191,11 @@ const doMatch = async () => {
 
   loading.value = true
   hasSearched.value = true
-  
+
   try {
     const result = await matchBySkills(matchForm.requiredSkills)
     tableData.value = result || []
-    
+
     if (tableData.value.length === 0) {
       ElMessage.info('未找到符合条件的员工')
     } else {
@@ -213,6 +218,8 @@ const clearResults = () => {
 const loadOptions = async () => {
   try {
     allSkills.value = await getAllSkills() || []
+    allProjects.value = await getAllProjectsDTO() || []
+    allDepartments.value = await getAllDepartments() || []
     ElMessage.success('选项刷新成功')
   } catch (error) {
     ElMessage.error('加载选项失败：' + error.message)
@@ -226,19 +233,19 @@ const updateSkillsFromSelector = () => {
   }
 
   const skillsStr = selectedSkills.value
-    .map(skillId => {
-      // 查找是否已有该技能的熟练度设置
-      const existing = matchForm.requiredSkills
-        .split(',')
-        .find(s => s.trim().startsWith(skillId + ':'))
-      
-      if (existing) {
-        return existing.trim()
-      } else {
-        return `${skillId}:${defaultProficiency.value}`
-      }
-    })
-    .join(',')
+      .map(skillId => {
+        // 查找是否已有该技能的熟练度设置
+        const existing = matchForm.requiredSkills
+            .split(',')
+            .find(s => s.trim().startsWith(skillId + ':'))
+
+        if (existing) {
+          return existing.trim()
+        } else {
+          return `${skillId}:${defaultProficiency.value}`
+        }
+      })
+      .join(',')
 
   matchForm.requiredSkills = skillsStr
 }
@@ -250,8 +257,8 @@ const applyDefaultProficiency = () => {
   }
 
   const skillsArray = matchForm.requiredSkills
-    ? matchForm.requiredSkills.split(',').map(s => s.trim())
-    : []
+      ? matchForm.requiredSkills.split(',').map(s => s.trim())
+      : []
 
   // 更新已选技能的熟练度
   selectedSkills.value.forEach(skillId => {
@@ -281,7 +288,7 @@ const formatDate = (date) => {
 }
 
 onMounted(() => {
-  // 初始不自动加载数据，等待用户操作
+  loadOptions()
 })
 </script>
 
@@ -341,5 +348,4 @@ onMounted(() => {
   font-size: 12px;
 }
 </style>
-
 

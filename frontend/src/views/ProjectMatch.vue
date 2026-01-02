@@ -109,7 +109,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="_id" label="项目ID" width="100" sortable />
+        <el-table-column prop="id" label="项目ID" width="100" sortable />
         <el-table-column prop="projName" label="项目名称" width="200" />
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
@@ -131,7 +131,7 @@
               type="info"
               style="margin-right: 5px; margin-bottom: 5px"
             >
-              技能{{ skill.skillId }}（最低{{ skill.minProficiency }}级）
+              {{ allSkills[skill.skillId]["skillName"] }}（最低{{ skill.minProficiency }}级）
             </el-tag>
             <span v-if="!row.requiredSkills || row.requiredSkills.length === 0" class="text-muted">无</span>
           </template>
@@ -144,7 +144,7 @@
               type="success"
               style="margin-right: 5px; margin-bottom: 5px"
             >
-              员工{{ member }}
+              {{ allMembers[member["empId"]].name }}
             </el-tag>
             <span v-if="!row.members || row.members.length === 0" class="text-muted">无</span>
           </template>
@@ -374,7 +374,9 @@ import {
   getProjectTasks,
   matchByEmployee,
   matchByProjectName,
-  updateProject
+  updateProject,
+  getEmployeeDTOs,
+  getSkillDTOs
 } from '@/api/project'
 
 const loading = ref(false)
@@ -395,6 +397,18 @@ const selectedProjects = ref([])
 const currentProject = ref(null)
 const allTasks = ref([])
 const taskFilter = ref('all')
+const allMembers = ref([])
+const allSkills = ref([])
+
+// 初始数据加载
+const loadData = async () => {
+  try {
+    allMembers.value = await getEmployeeDTOs() || []
+    allSkills.value = await getSkillDTOs() || []
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const projectForm = reactive({
   _id: null,
@@ -709,6 +723,7 @@ const formatDate = (date) => {
 
 onMounted(() => {
   // 初始不自动加载数据，等待用户操作
+  loadData()
 })
 </script>
 

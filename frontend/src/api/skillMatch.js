@@ -25,6 +25,14 @@ export function getAllProjects() {
   })
 }
 
+// 获取所有项目DTO
+export function getAllProjectsDTO() {
+  return request({
+    url: '/projectmatch/projectsDTO',
+    method: 'get'
+  })
+}
+
 // 获取所有部门
 export function getAllDepartments() {
   return request({

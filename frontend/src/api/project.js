@@ -125,3 +125,24 @@ export function deleteTask(taskId) {
   })
 }
 
+/**
+ * 获取技能DTO
+ * 对应后端：GET /skill/getSkillDTOs
+ */
+export function getSkillDTOs() {
+  return request({
+    url: `/skill/getSkillDTOs`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 获取员工DTO
+ * 对应后端：GET /employees/getEmployeeDTOs
+ */
+export function getEmployeeDTOs() {
+  return request({
+    url: `/employees/getEmployeeDTOs`,
+    method: 'GET'
+  })
+}
