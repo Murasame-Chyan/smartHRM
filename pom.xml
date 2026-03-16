@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -10,9 +11,11 @@
     </parent>
     <groupId>com.Murasame</groupId>
     <artifactId>smartHRM</artifactId>
-    <version>V1.0-260102</version>
+    <version>V2.0</version>
+    <packaging>pom</packaging>
     <name>smartHRM</name>
     <description>smartHRM</description>
+
     <url/>
     <licenses>
         <license/>
@@ -20,54 +23,116 @@
     <developers>
         <developer/>
     </developers>
+
+    <!--作为父项目所包含的模块-->
+    <modules>
+        <module>DepartmentService</module>
+        <module>commons</module>
+        <module>EmployeeService</module>
+        <module>ProjectService</module>
+        <module>SkillService</module>
+        <module>TrainingService</module>
+    </modules>
+
     <scm>
         <connection/>
         <developerConnection/>
         <tag/>
         <url/>
     </scm>
+
+    <!--一些属性引用值可以放在这-->
     <properties>
         <java.version>17</java.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
     </properties>
+
+    <!--父项目的依赖链只放所有项目都用得上的依赖,不要有多余的依赖-->
     <dependencies>
+        <!--SpringBoot基本依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <version>3.5.7</version>
         </dependency>
+
+        <!--SpringBootSecurity登录校验-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+
+        <!--SpringBootValidation接口参数正确性校验注解-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
 
+        <!--注解简化-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!--SpringBootTest - 包含了很多Spring整合测试方法-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--请把这个加在子项目中, 若使用SpringCloud的某个服务时则不需要这个web-->
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.boot</groupId>-->
+        <!--    <artifactId>spring-boot-starter-web</artifactId>-->
+        <!--</dependency>-->
     </dependencies>
 
+    <!--父项目只进行版本管理的依赖 - 暂时所有模块都要用spring-boot-starter-->
+    <dependencyManagement>
+        <dependencies>
+            <!--SpringBoot基本管理依赖-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+            </dependency>
+
+            <!--SpringCloud插件管理依赖-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--SpringCloudAlibaba插件-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2025.1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--SpringBoot的MongoDB数据库面向对象数据操作依赖-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                <version>3.5.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>3.5.7</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
+        <!--加载 Lombok 作为注解处理器,同时在构建Jar时将其进行共排除-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
