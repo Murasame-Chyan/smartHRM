@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--父项目pom-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -44,7 +45,7 @@
     <!--一些属性引用值可以放在这-->
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2025.1.0</spring-cloud.version>
+        <spring-cloud.version>2025.0.1</spring-cloud.version>
     </properties>
 
     <!--父项目的依赖链只放所有项目都用得上的依赖,不要有多余的依赖-->
@@ -111,7 +112,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2025.1.0.0</version>
+                <version>2025.0.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
