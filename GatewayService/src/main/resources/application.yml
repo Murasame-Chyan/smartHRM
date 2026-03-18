@@ -1,0 +1,61 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: gatewayService
+  cloud:
+    # 配置Nacos服务注册中心地址
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    # 配置网关路由服务
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: employee-service
+              uri: lb://EmployeeService
+              predicates:
+                  - Path=/employees/**
+            - id: department-service
+              uri: lb://DepartmentService
+              predicates:
+                  - Path=/departments/**
+            - id: project-service
+              uri: lb://ProjectService
+              predicates:
+                  - Path=/projects/**
+            - id: skill-service
+              uri: lb://SkillService
+              predicates:
+                  - Path=/skill/**
+            - id: training-service
+              uri: lb://TrainingService
+              predicates:
+                  - Path=/training/**
+            - id: skill-match-service
+              uri: lb://SkillService
+              predicates:
+                  - Path=/skillmatch/**
+            - id: project-match-service
+              uri: lb://ProjectService
+              predicates:
+                  - Path=/projectmatch/**
+            #      server:
+            #        webflux:
+            #          discovery:
+            #            locator:
+            #              # 开启自动路由 - 用于开发环境，生产环境一般使用半自动路由
+            #              enabled: true
+            #              # 服务名转小写 - 降低前端调用出错概率，无论大小写都不出错
+            #              lower-case-service-id: true
+                        # 只手动配置需要特殊处理的路由
+                        #          routes:
+                        # 只手动配置特殊：需要特殊过滤器的路由
+#            - id: user-service-header
+#              uri: lb://user-service
+#              predicates:
+#                - Path=/user/api/**
+#              filters:
+#                - AddRequestHeader=X-Source, Gateway

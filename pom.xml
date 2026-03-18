@@ -33,6 +33,7 @@
         <module>ProjectService</module>
         <module>SkillService</module>
         <module>TrainingService</module>
+        <module>GatewayService</module>
     </modules>
 
     <scm>
@@ -57,11 +58,11 @@
             <version>3.5.7</version>
         </dependency>
 
-        <!--SpringBootSecurity登录校验-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+        <!--&lt;!&ndash;SpringBootSecurity登录校验&ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.boot</groupId>-->
+        <!--    <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--</dependency>-->
 
         <!--SpringBootValidation接口参数正确性校验注解-->
         <dependency>
