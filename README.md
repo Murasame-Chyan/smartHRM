@@ -1,154 +1,153 @@
 # SmartHRM
 
-SmartHRM 是一个基于 Spring Boot 的人力资源管理系统，旨在帮助企业高效管理其员工、技能、项目及培训等信息。
+SmartHRM is a human resource management system based on Spring Boot, designed to help enterprises efficiently manage employee, skill, project, and training information.
 
-## 多语言目录 Multi-Language Index
-- README-cn.md - Here
-- README-en.md - [README-en.md](https://github.com/Murasame-Chyan/smartHRM/blob/master/README-en.md)。
+## Multi-Language Index
+- [README.md](docs/README.zh-CN.md) - Chinese
+- README-en.md - Here
 
-## 功能概览
+## Features Overview
 
-- **员工管理**：支持员工的增删改查操作。
-- **技能匹配**：根据项目需求技能，智能匹配合适的员工。
-- **项目检索**：根据项目名字段或参与员工id模糊搜索项目。
-- **任务分配**：对项目成员分配任务，统计完成率。
-- **部门与项目管理**：管理组织架构和项目信息。
-- **培训管理**：管理员工培训记录。
+- **Employee Management**: Supports CRUD operations for employees.
+- **Skill Matching**: Intelligent matching of suitable employees based on project skill requirements.
+- **Project Matching**: Fuzzy search project by name or involved employee's id.
+- **Task Assignment**: Assign tasks to project members and track completion rates.
+- **Department and Project Management**: Manage organizational structure and project information.
+- **Training Management**: Manage employee training records.
 
-## 技术栈
+## Technology Stack
 
 - Spring Boot
 - MongoDB
-- Thymeleaf (前端模板识别)
-- Bootstrap & jQuery (样式表 + 数据交互 & http请求)
+- Thymeleaf (frontend template engine)
+- Bootstrap & jQuery (styling + data interaction & http requests)
 
-## 模块说明
+## Module Description
 
-### 核心模块
+### Core Modules
 
-- **EmployeeController**：员工信息管理，员工的基本CRUD。
-- **SkillMatchController**：技能匹配功能，支持根据项目所需技能搜索合适员工。
-- **ProjectMatchController**：项目&任务信息管理，基本CRUD进行项目增设、任务分配、项目进度统计。
-- **SkillController**：技能信息管理。
-- **TrainingController**：培训信息管理，训练新增。
-- **DepartmentController**：部门管理，可以进行员工迁移。
+- **EmployeeController**: Manages employee information, including basic CRUD operations.
+- **SkillMatchController**: Provides skill matching functionality, allowing search for suitable employees based on required project skills.
+- **ProjectMatchController**: Manages project & task information, with basic CRUD operations for project addition, task assignment, and project progress tracking.
+- **SkillController**: Manages skill information.
+- **TrainingController**: Manages training information, including adding training sessions.
+- **DepartmentController**: Manages departmental information, allowing for employee transfers.
 
-### 数据访问层
+### Data Access Layer
 
-- **Dao**：直接访问MongoTemplate的CRUD操作和各类查询（模糊、分页查询）。
-- **Repo**：实体类数据访问层。
-- **DTO**：简易数据传输对象，放置小型数据传输对象减少冗余数据传输量，安置数据传输方法和特殊处理方法。
+- **Dao**: Direct access to MongoDB operations and various queries (fuzzy, pagination).
+- **Repo**: Entity class data access layer.
+- **DTO**: Simple data transfer objects to reduce redundant data transmission, containing data transfer methods and special processing methods.
 
-### 实体类
+### Entity Classes
 
-- **Employee**：员工实体，包含姓名、所属部门、技能列表等信息。
-- **Skill**：技能实体，包含技能名称、类型等信息。
-- **Project**：项目实体，包含项目名称、成员列表、所需技能等信息。
-- **Department**：部门实体，包含部门名称、经理ID、员工列表等信息。
-- **Task**：项目内多名员工分配任务。
-- **Training**：指定多名员工培训课程。
+- **Employee**: Employee entity containing name, department, skill list, and other information.
+- **Skill**: Skill entity containing skill name, type, and other information.
+- **Project**: Project entity containing project name, member list, required skills, and other information.
+- **Department**: Department entity containing department name, manager ID, employee list, and other information.
+- **Task**: Tasks assigned to multiple employees within a project.
+- **Training**: Training courses designated for multiple employees.
 
-## 快速开始
+## Quick Start
 
-### 环境要求
+### Prerequisites
 
 - Java 17
 - MongoDB
 - Maven
 - SpringBoot 3.x
 
-### 配置
+### Configuration
 
-1. 修改 `application.yml` 或使用 `application-dev.yml` / `application-prod.yml` 配置数据库连接等信息。
-2. 启动 MongoDB 服务。
+1. Modify `application.yml` or use `application-dev.yml` / `application-prod.yml` to configure database connections and other settings.
+2. Start the MongoDB service.
 
-### 启动项目
+### Run the Project
 
-	1. 运行主类 `SmartHrmApplication.java` 
-	1. 运行最新版本 `.jar` 包
+Run the main class `SmartHrmApplication.java` or run the latest version `.jar` package.
 
 ```bash
 java -jar xxx.jar
 ```
 
-访问 `http://localhost:8080/对应路由/` 使用系统。
+Access `localhost:8080/corresponding-route/` to use the system.
 
-## 使用说明
+## Usage Instructions
 
-- **员工管理**：访问 `/employees/` 路由，可进行员工的添加、修改、删除操作。
-- **项目管理**：访问 `/departments/` 路由，可进行项目的添加、修改、删除操作。
-- **技能匹配**：访问 `/skillmatch/` 路由，选择所需技能后，系统将自动匹配符合条件的员工。
-- **技能与训练管理**：访问 `/training/` 路由，管理技能与训练信息。
-- **项目匹配管理**：访问 `/projectmatch/` 路由，以项目名或参与员工id模糊搜索项目详情。
-- **application.yml**：设置本地数据库或云端数据库url，详见生效yml文件。
+- **Employee Management**: Visit `/employees/` route to perform add, modify, delete operations on employees.
+- **Project Management**: Access `/departments/` route to add, modify, delete projects.
+- **Skill Matching**: Access `/skillmatch/` route, select required skills, and the system will automatically match eligible employees.
+- **Skill & Training Management**: Visit `/training/` route to manage skill & training information.
+- **Project Matching Management**: Access `/projectmatch/` route to fuzzy search project details by project name or involved employee id.
+- **Application.yml**: Set up local or cloud database URLs, see details in the active .yml file.
 
-## 贡献指南
+## Contribution Guidelines
 
-欢迎贡献代码或提出建议！请遵循以下步骤：
+Contributions and suggestions are welcome! Please follow these steps:
 
-1. Fork 本仓库。
-2. 创建新分支 (`git checkout -b feature/new-feature`)。
-3. 从远程仓库-主分支获取最新更新后将新增文件加入git版本控制。
-4. 提交更改与更改描述 (`git commit -m 'Add new feature'`)。
-5. 推送至远程分支 (`git push origin feature/new-feature`)。
-6. 提交 Pull Request。
+1. Fork this repository.
+2. Create a new branch (`git checkout -b feature/new-feature`).
+3. After fetching the latest update from the remote repository, add your changes to git version control.
+4. Commit your changes with a description (`git commit -m 'Add new feature'`).
+5. Push to the remote branch (`git push origin feature/new-feature`).
+6. Submit a Pull Request.
 
-## 许可证
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 初版演示（未样式统一）
+## Demo Pages (style-Unconsistent ver.)
 
-### 	**员工管理**： `/employees/` 
+### **Employee Management**: `/employees/`
 
-#### 	总界面
+#### 	Total Interface
 
-<img src="pics\employee.png"  />
+![Employee Management](pics/employee.png)
 
-#### 	编辑员工
+#### 	Edit Employee
 
-<img src="pics\modEmployee.png"  />
+![Edit Employee](pics/modEmployee.png)
 
-#### 	新增员工
+#### 	Add Employee
 
-<img src="pics\addEmployee.png"  />
+![Add Employee](pics/addEmployee.png)
 
-### 	**部门管理**： `/departments/` 
+### **Department Management**: `/departments/`
 
-#### 	总界面
+#### 	Total Interface
 
-<img src="pics\department.png"  />
+![Department Management](pics/department.png)
 
-#### 	编辑项目
+#### 	Edit Project
 
-<img src="pics\modDepartment.png"  />
+![Edit Project](pics/modDepartment.png)
 
-#### 	增设部门
+#### 	Add Department
 
-<img src="pics\addDepartment.png"  />
+![Add Department](pics/addDepartment.png)
 
-### 	**技能匹配**： `/skillmatch/` 
+### **Skill Matching**: `/skillmatch/`
 
-<img src="pics\skillMatch.png"  />
+![Skill Matching](pics/skillMatch.png)
 
-### 	**项目管理**： `/projectmatch/`
+### **Project Management**: `/projectmatch/`
 
-#### 	总界面
+#### 	Total Interface
 
-<img src="pics\project1.png"  />
+![Project Management](pics/project1.png)
 
-#### 	编辑项目
+#### 	Edit Project
 
-<img src="pics\modProject.png"  />
+![Edit Project](pics/modProject.png)
 
-#### 	分配任务
+#### 	Assign Tasks
 
-<img src="pics\task.png"  />
+![Task Assignment](pics/task.png)
 
-#### 	启动项目
+#### 	Start Project
 
-<img src="pics\addProject.png" style="zoom:67%;" />
+![Start Project](pics/addProject.png)
 
-### 	**技能与训练管理**： `/training/`
+### 	**Skill & Training Management**: `/training/`
 
-<img src="pics\skill&training.png"  />
+![Skill & Training Management](pics/skill&training.png)

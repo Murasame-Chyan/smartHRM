@@ -35,3 +35,6 @@ build/
 
 ### dev-env ###
 src/main/resources/application-dev.yml
+
+### Nacos ###
+NacosService

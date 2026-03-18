@@ -1,0 +1,17 @@
+# 服务搭载端口(服务模块一般使用8081-8090以避开熟知端口)
+server:
+  port: 8085
+
+spring:
+  # Spring应用名称 - Eureka/Nacos 服务注册中显示的名字
+  application:
+    name: TrainingService
+  # SpringData数据库链接地址
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/smartHRM
+  # 配置Nacos服务注册中心地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

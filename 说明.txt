@@ -1,0 +1,12 @@
+commons模块为通用类模块 放置本项目需要使用的类及其扩展 供各模块引用
+DepartmentService为示例开发模块,拥有大量丰富注释供其他模块进行参考开发
+前端服务器 - 3000
+Node.js - 8080(?)
+DepartmentService - 8081    ：部门服务模块，以下同理
+EmployeeService - 8082
+ProjectService - 8083
+SkillService - 8084
+TrainingService - 8085
+gatewayService - 8090       ：网关服务
+NacosService - 8848         ：Nacos服务注册中心
+MongoDB Port - 27017        ：数据库地址
