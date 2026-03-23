@@ -1,9 +1,10 @@
 # SmartHRM
 
-SmartHRM is a human resource management system based on Spring Boot, designed to help enterprises efficiently manage employee, skill, project, and training information.
+SmartHRM is a microservice-based human resource management system built with Spring Boot and Spring Cloud, designed to help enterprises efficiently manage employee, skill, project, and training information.
 
 ## Multi-Language Index
-- [README.md](docs/README.zh-CN.md) - Chinese
+- [README.zh-CN.md](docs/README.zh-CN.md) - Chinese
+- [README.ja.md](docs/README.ja.md) - Japanese
 - README-en.md - Here
 
 ## Features Overview
@@ -17,24 +18,57 @@ SmartHRM is a human resource management system based on Spring Boot, designed to
 
 ## Technology Stack
 
-- Spring Boot
-- MongoDB
-- Thymeleaf (frontend template engine)
-- Bootstrap & jQuery (styling + data interaction & http requests)
+### Backend
+- **Spring Boot 3.5.7** - Application framework
+- **Spring Cloud 2025.0.1** - Microservice framework
+- **Spring Cloud Alibaba 2025.0.0.0** - Alibaba Cloud integration
+- **Spring Cloud Gateway** - API Gateway
+- **Nacos** - Service discovery and configuration center
+- **MongoDB** - Database
+- **Lombok** - Code simplification
+
+### Frontend
+- **Vue 3** - Progressive JavaScript framework
+- **Vite** - Next-generation frontend build tool
+- **Element Plus** - Vue 3 component library
+- **Vue Router** - Official routing manager
+- **Axios** - HTTP client
+
+## Microservice Architecture
+
+SmartHRM adopts a microservice architecture with the following services:
+
+### Service List
+
+| Service Name | Port | Description |
+|-------------|------|-------------|
+| GatewayService | 8090 | API Gateway for routing requests |
+| DepartmentService | 8081 | Department management service |
+| EmployeeService | 8082 | Employee management service |
+| ProjectService | 8083 | Project and task management service |
+| SkillService | 8084 | Skill and skill matching service |
+| TrainingService | 8085 | Training management service |
+| Nacos | 8848 | Service registry and configuration center |
+
+### Architecture Overview
+
+The system uses Spring Cloud Gateway as the unified entry point, which routes requests to different microservices based on URL paths. All services register with Nacos for service discovery. The frontend Vue application communicates with backend services through the Gateway.
 
 ## Module Description
 
-### Core Modules
+### Core Services
 
-- **EmployeeController**: Manages employee information, including basic CRUD operations.
+- **DepartmentService**: Manages departmental information, including department CRUD operations and employee transfers.
+- **EmployeeService**: Manages employee information, including basic CRUD operations.
+- **ProjectService**: Manages project & task information, with basic CRUD operations for project addition, task assignment, and project progress tracking.
+- **SkillService**: Manages skill information and provides skill matching functionality.
 - **SkillMatchController**: Provides skill matching functionality, allowing search for suitable employees based on required project skills.
-- **ProjectMatchController**: Manages project & task information, with basic CRUD operations for project addition, task assignment, and project progress tracking.
-- **SkillController**: Manages skill information.
-- **TrainingController**: Manages training information, including adding training sessions.
-- **DepartmentController**: Manages departmental information, allowing for employee transfers.
+- **TrainingService**: Manages training information, including adding training sessions.
+- **GatewayService**: API Gateway that routes requests to appropriate microservices.
 
-### Data Access Layer
+### Commons Module
 
+- **Entity Classes**: Core data models including Employee, Skill, Project, Department, Task, and Training.
 - **Dao**: Direct access to MongoDB operations and various queries (fuzzy, pagination).
 - **Repo**: Entity class data access layer.
 - **DTO**: Simple data transfer objects to reduce redundant data transmission, containing data transfer methods and special processing methods.
@@ -55,31 +89,150 @@ SmartHRM is a human resource management system based on Spring Boot, designed to
 - Java 17
 - MongoDB
 - Maven
-- SpringBoot 3.x
+- Node.js (for frontend)
+- Nacos Server
 
-### Configuration
+### Installation & Setup
 
-1. Modify `application.yml` or use `application-dev.yml` / `application-prod.yml` to configure database connections and other settings.
-2. Start the MongoDB service.
+#### 1. Install and Start Nacos
+
+Download Nacos from [Nacos GitHub](https://github.com/alibaba/nacos/releases) and start it:
+
+```bash
+# Windows
+startup.cmd
+
+# Linux/Mac
+sh startup.sh -m standalone
+```
+
+Access Nacos console at: http://localhost:8848/nacos
+Note: Please modify the default credentials in production environment for security.
+
+#### 2. Configure Database
+
+Start MongoDB service:
+
+```bash
+# Windows
+net start MongoDB
+
+# Linux/Mac
+mongod --dbpath /path/to/data
+```
+
+Configure MongoDB connection in each service's `application.yml`:
+```yaml
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/smartHRM
+```
+
+#### 3. Configure Nacos Address
+
+Each microservice's `application.yml` should have:
+```yaml
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+```
 
 ### Run the Project
 
-Run the main class `SmartHrmApplication.java` or run the latest version `.jar` package.
+#### Start Backend Services
 
+**Option 1: Using IDE**
+1. Open the project in IntelliJ IDEA or Eclipse
+2. Run each service's main application class in order:
+   - DepartmentApplication.java
+   - EmployeeApplication.java
+   - ProjectApplication.java
+   - SkillApplication.java
+   - TrainingApplication.java
+   - gatewayApplication.java (Gateway)
+
+**Option 2: Using Maven**
 ```bash
-java -jar xxx.jar
+# Build all modules
+mvn clean package
+
+# Run each service (from respective module directory)
+java -jar target/DepartmentService.jar
+java -jar target/EmployeeService.jar
+java -jar target/ProjectService.jar
+java -jar target/SkillService.jar
+java -jar target/TrainingService.jar
+java -jar target/GatewayService.jar
 ```
 
-Access `localhost:8080/corresponding-route/` to use the system.
+#### Start Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Access the System
+
+- **Frontend Application**: http://localhost:3000
+- **API Gateway**: http://localhost:8090
+- **Nacos Console**: http://localhost:8848/nacos
 
 ## Usage Instructions
 
-- **Employee Management**: Visit `/employees/` route to perform add, modify, delete operations on employees.
-- **Project Management**: Access `/departments/` route to add, modify, delete projects.
-- **Skill Matching**: Access `/skillmatch/` route, select required skills, and the system will automatically match eligible employees.
-- **Skill & Training Management**: Visit `/training/` route to manage skill & training information.
-- **Project Matching Management**: Access `/projectmatch/` route to fuzzy search project details by project name or involved employee id.
-- **Application.yml**: Set up local or cloud database URLs, see details in the active .yml file.
+### Frontend Routes
+
+- **Employee Management**: Visit `/employees` route to perform add, modify, delete operations on employees.
+- **Department Management**: Access `/departments` route to add, modify, delete departments.
+- **Skill Management**: Access `/skills` route to manage skill information.
+- **Training Management**: Visit `/trainings` route to manage training information.
+- **Skill Matching**: Access `/skillmatch` route, select required skills, and the system will automatically match eligible employees.
+- **Project Matching Management**: Access `/projectmatch` route to fuzzy search project details by project name or involved employee id.
+
+### Backend API Routes (via Gateway)
+
+All backend APIs are accessed through the Gateway at http://localhost:8090:
+
+- `/employees/**` - Employee Service
+- `/departments/**` - Department Service
+- `/projects/**` - Project Service
+- `/skill/**` - Skill Service
+- `/training/**` - Training Service
+- `/skillmatch/**` - Skill Matching Service
+- `/projectmatch/**` - Project Matching Service
+
+## Configuration
+
+### Service Configuration
+
+Each microservice has its own `application.yml` file located in `src/main/resources/`:
+
+- `GatewayService/src/main/resources/application.yml` - Gateway routing configuration
+- `EmployeeService/src/main/resources/application.yml` - Employee service configuration
+- `DepartmentService/src/main/resources/application.yml` - Department service configuration
+- `ProjectService/src/main/resources/application.yml` - Project service configuration
+- `SkillService/src/main/resources/application.yml` - Skill service configuration
+- `TrainingService/src/main/resources/application.yml` - Training service configuration
+
+### Frontend Configuration
+
+Frontend API proxy is configured in `frontend/vite.config.js`:
+
+```javascript
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8090',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, '')
+    }
+  }
+}
+```
 
 ## Contribution Guidelines
 
@@ -96,58 +249,48 @@ Contributions and suggestions are welcome! Please follow these steps:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Demo Pages (style-Unconsistent ver.)
+## Demo Pages
 
 ### **Employee Management**: `/employees/`
 
 #### 	Total Interface
 
-![Employee Management](pics/employee.png)
-
-#### 	Edit Employee
-
-![Edit Employee](pics/modEmployee.png)
+[Employee Management]()
 
 #### 	Add Employee
 
-![Add Employee](pics/addEmployee.png)
+[Add Employee]()
 
 ### **Department Management**: `/departments/`
 
 #### 	Total Interface
 
-![Department Management](pics/department.png)
-
-#### 	Edit Project
-
-![Edit Project](pics/modDepartment.png)
+[Department Management]()
 
 #### 	Add Department
 
-![Add Department](pics/addDepartment.png)
+[Add Department]()
 
 ### **Skill Matching**: `/skillmatch/`
 
-![Skill Matching](pics/skillMatch.png)
+[Skill Matching]()
 
 ### **Project Management**: `/projectmatch/`
 
 #### 	Total Interface
 
-![Project Management](pics/project1.png)
-
-#### 	Edit Project
-
-![Edit Project](pics/modProject.png)
+[Project Management]()
 
 #### 	Assign Tasks
 
-![Task Assignment](pics/task.png)
-
-#### 	Start Project
-
-![Start Project](pics/addProject.png)
+[Task Assignment]()
 
 ### 	**Skill & Training Management**: `/training/`
 
-![Skill & Training Management](pics/skill&training.png)
+[Skill & Training Management]()
+
+## Additional Resources
+
+- [QUICK_START.md](QUICK_START.md) - Detailed quick start guide
+- [frontend/README.md](frontend/README.md) - Frontend documentation
+- [docs/README.zh-CN.md](docs/README.zh-CN.md) - Chinese documentation
